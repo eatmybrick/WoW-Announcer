@@ -1,0 +1,32 @@
+name: WoW Forever announcer
+
+on:
+  schedule:
+    # twice an hour, off the top of the hour because GitHub is slowest then
+    - cron: "17,47 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: announcer
+  cancel-in-progress: false
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check feed and post new items to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python3 wowforever_news.py --backfill 3
+
+      - name: Save what has been posted
+        run: |
+          git config user.name "announcer"
+          git config user.email "announcer@users.noreply.github.com"
+          git add seen.json
+          git diff --cached --quiet || (git commit -m "update seen items" && git push)
