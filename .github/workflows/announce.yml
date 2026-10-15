@@ -18,6 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # always start from the newest main so queued runs see the latest seen.json
+          ref: main
 
       - name: Check feed and post new items to Discord
         env:
