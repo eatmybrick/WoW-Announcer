@@ -2,8 +2,8 @@ name: WoW Forever announcer
 
 on:
   schedule:
-    # twice an hour, off the top of the hour because GitHub is slowest then
-    - cron: "17,47 * * * *"
+    # every 5 minutes (GitHub's minimum), offset so it skips :00 and :30 when GitHub is slowest
+    - cron: "3-58/5 * * * *"
   workflow_dispatch:
 
 permissions:
